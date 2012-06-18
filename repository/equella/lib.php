@@ -122,6 +122,15 @@ class repository_equella extends repository {
         return $source;
     }
 
+    public function make_temp_directory_for_user() {
+        global $USER;
+        $userid = $USER->id;
+        if ($userid == 0) {
+            $userid = 'guest-'.rand();
+        }
+        return make_temp_directory('repository/equella/'.$userid);
+    }
+
     /**
      * Download a file, this function can be overridden by subclass. {@link curl}
      *
@@ -130,9 +139,8 @@ class repository_equella extends repository {
      * @return string the location of the file
      */
     public function get_file($url, $filename = '') {
-        global $USER;
         $cookiename = uniqid('', true) . '.cookie';
-        $dir = make_temp_directory('repository/equella/' . $USER->id);
+        $dir = make_temp_directory_for_user();
         $cookiepathname = $dir . '/' . $cookiename;
         $path = $this->prepare_file($filename);
         $fp = fopen($path, 'w');
