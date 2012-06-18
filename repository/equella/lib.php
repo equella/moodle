@@ -219,6 +219,9 @@ class repository_equella extends repository {
         );
         $mform->addElement('select', 'equella_select_restriction', get_string('selectrestriction', 'repository_equella'), $choices);
 
+        $mform->addElement('text', 'equella_guest_username', get_string('equellaguestusername', 'repository_equella'));
+        $mform->setType('equella_guest_username', PARAM_NOTAGS);
+
         $mform->addElement('header', '',
             get_string('group', 'repository_equella', get_string('groupdefault', 'repository_equella')));
         $mform->addElement('text', 'equella_shareid', get_string('sharedid', 'repository_equella'));
@@ -246,7 +249,7 @@ class repository_equella extends repository {
      */
     public static function get_instance_option_names() {
         $rv = array('equella_url', 'equella_select_restriction', 'equella_options',
-            'equella_shareid', 'equella_sharedsecret'
+            'equella_guest_username', 'equella_shareid', 'equella_sharedsecret'
         );
 
         foreach (self::get_all_editing_roles() as $role) {
@@ -300,8 +303,16 @@ class repository_equella extends repository {
     private function getssotoken($readwrite = 'read') {
         global $USER;
 
-        if (empty($USER->username)) {
-            return false;
+        $username = $USER->username;
+        if (empty($username)) {
+
+            // Moodle guest - try guest username if configured and force a 'read' token only.
+            $username = $this->get_option('equella_guest_username');
+            $readwrite= 'read';
+
+            if (empty($username)) {
+                return false;
+            }
         }
 
         if ($readwrite == 'write') {
@@ -320,7 +331,7 @@ class repository_equella extends repository {
         // If we are only reading, use the unadorned shareid and secret.
         $shareid = $this->get_option('equella_shareid');
         if (!empty($shareid)) {
-            return $this->getssotoken_raw($USER->username, $shareid, $this->get_option('equella_sharedsecret'));
+            return $this->getssotoken_raw($username, $shareid, $this->get_option('equella_sharedsecret'));
         }
     }
 

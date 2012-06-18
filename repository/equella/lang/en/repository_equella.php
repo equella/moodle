@@ -26,11 +26,12 @@ $string['pluginname'] = 'EQUELLA repository';
 $string['configplugin'] = 'Configuration for EQUELLA repository';
 $string['search'] = 'Search EQUELLA';
 $string['breadcrumb'] = 'EQUELLA';
+$string['equella:view'] = 'View EQUELLA repository';
 
 $string['equellaurl'] = 'EQUELLA URL';
 $string['equellaaction'] = 'EQUELLA action';
 $string['equellaoptions'] = 'EQUELLA options';
-$string['equella:view'] = 'View EQUELLA repository';
+$string['equellaguestusername'] = 'EQUELLA username for Moodle guests';
 $string['sharedid'] = 'Shared secret ID';
 $string['sharedsecrets'] = 'Shared secret';
 
